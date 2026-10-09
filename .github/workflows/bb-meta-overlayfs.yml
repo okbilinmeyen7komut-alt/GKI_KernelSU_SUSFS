@@ -19,6 +19,16 @@ jobs:
           # Kernel-SU/rustix catali artik erisilemiyor; ayni tarihteki ksud'un kullandigi resmi crates.io surumu
           sed -i 's|^rustix = { git = "https://github.com/Kernel-SU/rustix.git".*|rustix = { version = "=1.0.8", features = ["all-apis"] }|' userspace/meta-overlayfs/Cargo.toml
           grep -n rustix userspace/meta-overlayfs/Cargo.toml
+          # Resmi rustix mount() veri parametresi Option<&CStr> istiyor (Kernel-SU catali String kabul ediyordu)
+          python3 - <<'PY'
+          p = "userspace/meta-overlayfs/src/mount.rs"
+          s = open(p).read()
+          eski = '            MountFlags::empty(),\n            data,\n        )?;'
+          yeni = '            MountFlags::empty(),\n            Some(std::ffi::CString::new(data)?.as_c_str()),\n        )?;'
+          assert s.count(eski) == 1, "mount() cagrisi bulunamadi"
+          open(p, "w").write(s.replace(eski, yeni))
+          print("mount.rs duzeltildi")
+          PY
 
       - name: Rust + cargo-ndk
         run: |
