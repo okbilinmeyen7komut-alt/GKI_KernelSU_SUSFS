@@ -131,8 +131,6 @@ on:
         description: "Render release notes preview only (skip all builds + release)"
         type: boolean
         default: false
-  schedule:
-    - cron: '0 5 * * 1'  # Monday 12am EST (5am UTC)
 
 jobs:
   resolve-sources:

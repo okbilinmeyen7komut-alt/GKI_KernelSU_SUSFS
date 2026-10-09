@@ -541,6 +541,13 @@ jobs:
         version: ${{ inputs.version }}
         allow_version_mismatch: true
 
+    - name: Enable SukiSU KPM (BB)
+      if: inputs.root_flavor == 'sukisu-ultra'
+      uses: ./.github/actions/set-kernel-config
+      with:
+        config_list: |
+          CONFIG_KPM=y
+
     - name: Build Normal Kernel
       env:
         SOURCE_DATE_EPOCH: ${{ env.SOURCE_DATE_EPOCH }}
