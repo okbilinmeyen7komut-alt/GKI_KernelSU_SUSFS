@@ -16,6 +16,9 @@ jobs:
           cd ksu
           git checkout 5e1979d2
           git log -1 --format='%H %ad %s' --date=short
+          # Kernel-SU/rustix catali artik erisilemiyor; ayni tarihteki ksud'un kullandigi resmi crates.io surumu
+          sed -i 's|^rustix = { git = "https://github.com/Kernel-SU/rustix.git".*|rustix = { version = "=1.0.8", features = ["all-apis"] }|' userspace/meta-overlayfs/Cargo.toml
+          grep -n rustix userspace/meta-overlayfs/Cargo.toml
 
       - name: Rust + cargo-ndk
         run: |
